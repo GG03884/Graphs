@@ -1,0 +1,75 @@
+#include <iostream>
+#include "climits"
+using namespace std;
+int findminvertex(bool *visited,int V,int * distance)
+{
+    int mv=-1;
+    for(int i=0;i<V;i++)
+    {
+        if(!visited[i] && (mv==-1 || distance[i]<distance[mv]))
+        {
+            mv=i;
+        }
+    }
+    return mv;
+}
+void dijalgo(int ** edge,int V,int E,bool * visited,int * distance)
+{
+    for(int i=0;i<V;i++)
+    {
+        int mv=findminvertex(visited,V,distance);
+        visited[mv]=true;
+        for(int j=0;j<V;j++)
+        {
+            if(edge[j][mv]>0 && !visited[j])
+            {
+              int   dmv=distance[mv]+edge[j][mv];
+              if(distance[j]>dmv)
+              {
+                 distance[j]=dmv;
+              }
+            }
+        }
+    }
+    for(int i=0;i<V;i++)
+    {
+        cout<<i<<" "<<distance[i]<<endl;
+    }
+    return;
+}
+
+int main() {
+    // Write your code here
+    int V,E;
+    cin>>V>>E;
+    int ** edge=new int *[V];
+    for(int i=0;i<V;i++)
+    {
+        edge[i]=new int[V];
+        for(int j=0;j<V;j++)
+        {
+            edge[i][j]=0;
+        }
+    }
+    for(int i=0;i<E;i++)
+    {
+        int s,d,w;
+        cin>>s>>d>>w;
+        edge[s][d]=w;
+        edge[d][s]=w;
+    }
+    bool * visited=new bool[V];
+    for(int i=0;i<V;i++)
+    {
+        visited[i]=false;
+    }
+    int * distance=new int[V];
+    for(int i=0;i<V;i++)
+    {
+        distance[i]=INT_MAX;
+    }
+    distance[0]=0;
+    dijalgo(edge,V,E,visited,distance);
+    return 0;
+
+}
