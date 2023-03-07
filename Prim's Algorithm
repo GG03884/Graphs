@@ -1,0 +1,87 @@
+#include <iostream>
+#include<climits>
+using namespace std;
+int findminvertex(int * weight,int V,bool * visited)
+{
+    int minimum=-1;
+    for(int i=0;i<V;i++)
+    {
+        if((minimum==-1 || weight[i]<weight[minimum]) && !visited[i])
+        {
+            minimum=i;
+        }
+    }
+    return minimum;
+}
+void printmst(int**edges,bool*visited,int * parent,int * weight,int V,int E)
+{
+    for(int i=0;i<(V-1);i++)
+    {
+        int vertex=findminvertex(weight, V,visited);
+        visited[vertex]=true;
+        for(int j=0;j<V;j++)
+        {
+            if(edges[vertex][j]>0 && !visited[j])
+            {
+                if(weight[j]>edges[vertex][j])
+                {
+                    weight[j]=edges[vertex][j];
+                    parent[j]=vertex;
+                }
+            }
+        }
+    }
+    for(int i=1;i<V;i++)
+    {
+        if(parent[i]>i)
+        {
+            cout<<i<<" "<<parent[i]<<" "<<weight[i];
+            cout<<endl;
+        }
+        else{
+            cout<<parent[i]<<" "<<i<<" "<<weight[i];
+            cout<<endl;
+        }        
+    }
+    return;
+}
+int main() {
+    // Write your code here
+    int V,E;
+    cin>>V>>E;
+    int ** edges=new int*[V];
+    for(int i=0;i<V;i++)
+    {
+        edges[i]=new int[V];
+        for(int j=0;j<V;j++)
+        {
+            edges[i][j]=0;
+        }
+    }
+    for(int i=0;i<E;i++)
+    {
+        int s,d,w;
+        cin>>s>>d>>w;
+        edges[s][d]=w;
+        edges[d][s]=w;
+    }
+    bool * visited=new bool[V];
+    for(int i=0;i<V;i++)
+    {
+        visited[i]=false;
+    }
+    int * parent=new int[V];
+   /* for(int i=0;i<V;i++)
+    {
+        parent[i]=-1;
+    }*/
+    parent[0]=-1;
+    int * weight=new int[V];
+    for(int i=0;i<V;i++)
+    {
+        weight[i]=INT_MAX;
+    }
+    weight[0]=0;
+    printmst(edges,visited,parent,weight,V,E);
+    return 0;
+}
